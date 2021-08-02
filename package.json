@@ -16,6 +16,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
+    "ix",
     "lib",
     "src",
     "!src/**/*.test.ts",
@@ -33,7 +34,6 @@
     "@tsconfig/recommended": "^1.0.1",
     "@types/jest": "^26.0.24",
     "@types/lodash.isequal": "^4.0.0",
-    "ix": "^4.5.0",
     "jest": "^27.0.6",
     "jest-mock-random": "^1.1.1",
     "prettier": "^2.3.2",
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "abort-controller-x": "^0.2.6",
+    "ix": "^4.5.0",
     "lodash.isequal": "^4.0.0",
     "node-abort-controller": "^2.0.0"
   }

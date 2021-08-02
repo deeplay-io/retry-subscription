@@ -1,0 +1,7 @@
+{
+  "name": "retry-subscription-ix",
+  "version": "0.0.0",
+  "private": true,
+  "main": "../lib/ix/index.js",
+  "typings": "../lib/ix/index.d.ts"
+}

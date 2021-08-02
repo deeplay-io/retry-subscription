@@ -5,6 +5,7 @@ Automatically retry subscriptions with exponential backoff.
 - [Installation](#installation)
 - [Usage](#usage)
   - [Collection subscriptions](#collection-subscriptions)
+  - [IxJS operators](#ixjs-operators)
 
 ## Installation
 
@@ -124,6 +125,12 @@ type RetryCollectionSubscriptionOptions<Value, Revision = Value> = {
   equality?: (a: Revision, b: Revision) => boolean;
 };
 ```
+
+### IxJS operators
+
+All functions are also exported in form of
+[`IxJS`](https://github.com/ReactiveX/IxJS) operators from
+`retry-subscription/ix` module.
 
 [npm-image]: https://badge.fury.io/js/retry-subscription.svg
 [npm-url]: https://badge.fury.io/js/retry-subscription
