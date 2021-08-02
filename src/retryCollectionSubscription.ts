@@ -1,5 +1,5 @@
 import {delay, rethrowAbortError} from 'abort-controller-x';
-import {AbortSignal} from 'node-abort-controller';
+import AbortController, {AbortSignal} from 'node-abort-controller';
 import isEqual = require('lodash.isequal');
 
 export type RetryCollectionSubscriptionOptions<Value, Revision = Value> = {
