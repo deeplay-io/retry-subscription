@@ -1,5 +1,4 @@
 import {delay, rethrowAbortError} from 'abort-controller-x';
-import AbortController, {AbortSignal} from 'node-abort-controller';
 import isEqual = require('lodash.isequal');
 
 export type RetryCollectionSubscriptionOptions<Value, Revision = Value> = {
@@ -13,16 +12,16 @@ export type RetryCollectionSubscriptionOptions<Value, Revision = Value> = {
    *
    * Defaults to 1000.
    *
-   * Example: if `baseMs` is 100, then retries will be attempted in 100ms,
+   * Example: if `baseDelayMs` is 100, then retries will be attempted in 100ms,
    * 200ms, 400ms etc (not counting jitter).
    */
-  baseMs?: number;
+  baseDelayMs?: number;
   /**
    * Maximum delay between attempts in milliseconds.
    *
    * Defaults to 15 seconds.
    *
-   * Example: if `baseMs` is 1000 and `maxDelayMs` is 3000, then retries will be
+   * Example: if `baseDelayMs` is 1000 and `maxDelayMs` is 3000, then retries will be
    * attempted in 1000ms, 2000ms, 3000ms, 3000ms etc (not counting jitter).
    */
   maxDelayMs?: number;
@@ -91,7 +90,7 @@ export async function* retryCollectionSubscription<
 ): AsyncIterable<Array<CollectionSubscriptionUpdate<Key, Value>>> {
   const {
     signal = new AbortController().signal,
-    baseMs = 1000,
+    baseDelayMs = 1000,
     maxDelayMs = 15000,
     maxAttempts = Infinity,
     onError,
@@ -177,7 +176,10 @@ export async function* retryCollectionSubscription<
         }
 
         // https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/
-        const backoff = Math.min(maxDelayMs, Math.pow(2, attempt) * baseMs);
+        const backoff = Math.min(
+          maxDelayMs,
+          Math.pow(2, attempt) * baseDelayMs,
+        );
         const delayMs = Math.round((backoff * (1 + Math.random())) / 2);
 
         onError?.(error, attempt, delayMs);

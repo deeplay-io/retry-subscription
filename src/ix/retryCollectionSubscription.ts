@@ -1,6 +1,5 @@
 import {AsyncIterableX} from 'ix/asynciterable';
 import {wrapWithAbort} from 'ix/asynciterable/operators';
-import {AbortSignal} from 'node-abort-controller';
 import {
   retryCollectionSubscription as retry,
   CollectionSubscriptionUpdate,
