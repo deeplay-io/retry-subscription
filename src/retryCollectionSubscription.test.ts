@@ -172,3 +172,70 @@ test('backoff', async () => {
     ]
   `);
 });
+
+test('undefined value in initial emission', async () => {
+  type Updates = Array<CollectionSubscriptionUpdate<string, {test: string}>>;
+
+  const sink = new AsyncSink<Updates>();
+
+  const it = retryCollectionSubscription(() => sink)[Symbol.asyncIterator]();
+
+  sink.write([
+    {key: '1', value: {test: '1'}},
+    {key: '2', value: undefined},
+  ]);
+
+  await expect(it.next()).rejects.toMatchInlineSnapshot(
+    `[Error: Misbehaving subscription source: unexpected 'undefined' value at key '2' in initial emission]`,
+  );
+});
+
+test('undefined value in initial emission after retry', async () => {
+  type Updates = Array<CollectionSubscriptionUpdate<string, {test: string}>>;
+
+  const sink1 = new AsyncSink<Updates>();
+  const sink2 = new AsyncSink<Updates>();
+
+  const subscribe = jest
+    .fn<AsyncIterable<Updates>, []>()
+    .mockImplementationOnce(() => sink1)
+    .mockImplementationOnce(() => sink2);
+
+  const it = retryCollectionSubscription(subscribe)[Symbol.asyncIterator]();
+
+  sink1.write([]);
+  sink1.error(new Error('test-error'));
+
+  sink2.write([{key: '1', value: undefined}]);
+
+  await expect(it.next()).resolves.toMatchInlineSnapshot(`
+          Object {
+            "done": false,
+            "value": Array [],
+          }
+        `);
+  await expect(it.next()).rejects.toMatchInlineSnapshot(
+    `[Error: Misbehaving subscription source: unexpected 'undefined' value at key '1' in initial emission]`,
+  );
+});
+
+test('undefined value in for key not present in the state', async () => {
+  type Updates = Array<CollectionSubscriptionUpdate<string, {test: string}>>;
+
+  const sink = new AsyncSink<Updates>();
+
+  const it = retryCollectionSubscription(() => sink)[Symbol.asyncIterator]();
+
+  sink.write([]);
+  sink.write([{key: '1', value: undefined}]);
+
+  await expect(it.next()).resolves.toMatchInlineSnapshot(`
+          Object {
+            "done": false,
+            "value": Array [],
+          }
+        `);
+  await expect(it.next()).rejects.toMatchInlineSnapshot(
+    `[Error: Misbehaving subscription source: unexpected 'undefined' value at key '1' which was not present in the state]`,
+  );
+});

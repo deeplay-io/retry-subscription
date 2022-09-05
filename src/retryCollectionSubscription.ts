@@ -121,8 +121,10 @@ export async function* retryCollectionSubscription<
 
           for (const {key, value} of updates) {
             if (value === undefined) {
-              throw new Error(
-                `Unexpected 'undefined' value at key '${key}' in initial emission`,
+              throw markErrorAsInternal(
+                new Error(
+                  `Misbehaving subscription source: unexpected 'undefined' value at key '${key}' in initial emission`,
+                ),
               );
             }
 
@@ -146,11 +148,21 @@ export async function* retryCollectionSubscription<
         } else {
           for (const {key, value} of updates) {
             if (value === undefined) {
+              if (innerCount === 0) {
+                throw markErrorAsInternal(
+                  new Error(
+                    `Misbehaving subscription source: unexpected 'undefined' value at key '${key}' in initial emission`,
+                  ),
+                );
+              }
+
               const deleted = state.delete(key);
 
               if (!deleted) {
-                throw new Error(
-                  `Unexpected 'undefined' value at key '${key}': previous value was already 'undefined'`,
+                throw markErrorAsInternal(
+                  new Error(
+                    `Misbehaving subscription source: unexpected 'undefined' value at key '${key}' which was not present in the state`,
+                  ),
                 );
               }
             } else {
@@ -165,6 +177,10 @@ export async function* retryCollectionSubscription<
       return;
     } catch (error) {
       rethrowAbortError(error);
+
+      if (onError == null && isInternalError(error)) {
+        throw error;
+      }
 
       if (attempt === undefined) {
         onError?.(error, undefined, undefined);
@@ -190,4 +206,16 @@ export async function* retryCollectionSubscription<
       }
     }
   }
+}
+
+const internalErrors = new WeakSet<Error>();
+
+function markErrorAsInternal(error: Error) {
+  internalErrors.add(error);
+
+  return error;
+}
+
+function isInternalError(error: unknown) {
+  return error instanceof Error && internalErrors.has(error);
 }
