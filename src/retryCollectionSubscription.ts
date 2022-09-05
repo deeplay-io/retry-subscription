@@ -19,7 +19,7 @@ export type RetryCollectionSubscriptionOptions<Value, Revision = Value> = {
   /**
    * Maximum delay between attempts in milliseconds.
    *
-   * Defaults to 15 seconds.
+   * Defaults to 30 seconds.
    *
    * Example: if `baseDelayMs` is 1000 and `maxDelayMs` is 3000, then retries will be
    * attempted in 1000ms, 2000ms, 3000ms, 3000ms etc (not counting jitter).
@@ -91,7 +91,7 @@ export async function* retryCollectionSubscription<
   const {
     signal = new AbortController().signal,
     baseDelayMs = 1000,
-    maxDelayMs = 15000,
+    maxDelayMs = 30000,
     maxAttempts = Infinity,
     onError,
     getRevision = value => value as unknown as Revision,
