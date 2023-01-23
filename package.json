@@ -15,6 +15,16 @@
   "repository": "deeplay-io/retry-subscription",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./ix": {
+      "types": "./lib/ix/index.d.ts",
+      "default": "./lib/ix/index.js"
+    }
+  },
   "files": [
     "ix",
     "lib",
