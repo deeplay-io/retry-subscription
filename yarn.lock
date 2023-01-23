@@ -1416,10 +1416,10 @@ istanbul-reports@^3.0.2:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-ix@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/ix/-/ix-4.5.0.tgz#44e6c5652e3bcb95c1a1d216afdc5225610205b9"
-  integrity sha512-Dtj/nuKa+WjJfxRwgIpRBFs/83fDnhmiZlvYXPVIzBc/n8kwaaRqKwdSr8ySB8zrVGFWomiPWwIMbKSa1/FYHA==
+"ix@^4.5.0 || ^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ix/-/ix-5.0.0.tgz#b9e292f79b1876bbf696809fe86e42930bdbfcd4"
+  integrity sha512-6LyyrHnvNrSy5pKtW/KA+KKusHrB223aBJCJlIGPN7QBfDkEEtNrAkAz9lLLShIcdJntq6BiPCHuKaCM/9wwXw==
   dependencies:
     "@types/node" "^13.7.4"
     tslib "^2.3.0"
